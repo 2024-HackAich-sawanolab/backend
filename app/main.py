@@ -8,5 +8,9 @@ router.include_router(
     tags=['users']
 )
 
+@router.get('/health')
+async def health():
+    return {'status': 'ok'}
+
 app = FastAPI()
 app.include_router(router)
