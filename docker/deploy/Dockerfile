@@ -1,24 +1,24 @@
 FROM python:3.8
 
-RUN apt update \
-    && apt install -y default-mysql-client \
-    && apt install --no-install-recommends -y tzdata \
-    && apt clean
+RUN apt-get update && apt-get install -y \
+    default-mysql-client \
+    tzdata \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/src
+WORKDIR /usr/src/app
+
 COPY app /usr/src/app
 COPY db /usr/src/db 
 COPY scripts /usr/src/scripts
+COPY docker/deploy/requirements.txt .
 
-COPY docker/deploy/requirements.txt /usr/src/app/requirements.txt
-
-WORKDIR /usr/src/app
-ADD docker/deploy/requirements.txt .
-RUN pip install -U pip \
-    && pip install --trusted-host pypi.python.org -r requirements.txt
+RUN pip install --no-cache-dir -U pip \
+    && pip install --no-cache-dir -r requirements.txt
 
 ENV PYTHONPATH=/usr/src/app
 
-# run Scripts/run.sh
-CMD ["sh", "/usr/src/scripts/run.sh"]
+EXPOSE 8080
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1"]
 
