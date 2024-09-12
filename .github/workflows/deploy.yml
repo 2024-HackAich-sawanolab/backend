@@ -33,6 +33,6 @@ jobs:
           registry: ${{ env.ECR_REGISTRY }}
       - name: Build and push API
         run: |
-          docker build -f./docker/deploy/Dockerfile -t hack-aich.
+          docker build -f./docker/deploy/Dockerfile -t hack-aich .
           docker tag hack-aich:latest ${{ env.ECR_REGISTRY }}/hack-aich:latest
           docker push ${{ env.ECR_REGISTRY }}/hack-aich:latest
