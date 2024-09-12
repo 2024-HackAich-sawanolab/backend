@@ -18,6 +18,8 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -31,6 +33,9 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.ECR_REGISTRY }}
+      - name: Set working directory
+        run: |
+          cd $GITHUB_WORKSPACE
       - name: Build and push API
         run: |
           docker build -f docker/deploy/Dockerfile -t hack-aich .
