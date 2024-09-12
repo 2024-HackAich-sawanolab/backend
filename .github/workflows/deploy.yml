@@ -1,9 +1,10 @@
 name: Build And Push
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+    types: [opened, synchronize]
 
 env:
   AWS_REGION: ap-northeast-1
