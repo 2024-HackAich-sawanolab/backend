@@ -3,12 +3,6 @@ from app.cruds import google_api
 from fastapi import APIRouter, Response, Request, status
 
 router = APIRouter()
-REDIRECT_URI = "http://localhost:8888/auth/callback"
-AUTHORIZATION_BASE_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
-TOKEN_URL = 'https://oauth2.googleapis.com/token'
-USER_INFO_URL = 'https://www.googleapis.com/oauth2/v1/userinfo'
-SCOPES = ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email']
-
 
 @router.get('/login')
 async def get_google_api(request: Request):

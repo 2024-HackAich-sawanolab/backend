@@ -3,36 +3,31 @@ from urllib.parse import urlencode
 from fastapi.responses import RedirectResponse
 import requests
 from fastapi import HTTPException
-
+from .. import env
 
 SCOPES = ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email']
-REDIRECT_URI = "http://localhost:8888/auth/callback"
-AUTHORIZATION_BASE_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
-TOKEN_URL = 'https://oauth2.googleapis.com/token'
 
-GOOGLE_CLIENT_ID = ""
-GOOGLE_CLIENT_SECRET = ""
 def auth():
     state = secrets.token_urlsafe(16)
     params = {
-        "client_id": GOOGLE_CLIENT_ID,
+        "client_id": env.GOOGLE_CLIENT_ID,
         "response_type": "code",
         "scope": " ".join(SCOPES),
-        "redirect_uri": REDIRECT_URI,
+        "redirect_uri": env.REDIRECT_URI,
         "access_type": "offline",
         "prompt": "consent",
         "state": state,
     }
-    auth_url = f"{AUTHORIZATION_BASE_URL}?{urlencode(params)}"
+    auth_url = f"{env.AUTHORIZATION_BASE_URL}?{urlencode(params)}"
     response = RedirectResponse(url=auth_url)
     return response
 
 def get_access_token(code: str) -> dict:
     data = {
         "code": code,
-        "client_id": GOOGLE_CLIENT_ID,
-        "client_secret": GOOGLE_CLIENT_SECRET,
-        "redirect_uri": REDIRECT_URI,
+        "client_id": env.GOOGLE_CLIENT_ID,
+        "client_secret": env.GOOGLE_CLIENT_SECRET,
+        "redirect_uri": env.REDIRECT_URI,
         "grant_type": "authorization_code",
     }
 
@@ -40,7 +35,7 @@ def get_access_token(code: str) -> dict:
         "Content-Type": "application/x-www-form-urlencoded"
     }
 
-    response = requests.post(TOKEN_URL, data=data, headers=headers)
+    response = requests.post(env.TOKEN_URL, data=data, headers=headers)
 
     if response.status_code != 200:
         raise HTTPException(status_code=400, detail="アクセストークンの取得に失敗しました。")
