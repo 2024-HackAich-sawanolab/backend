@@ -24,6 +24,7 @@ services:
       TZ: "Asia/Tokyo"
     env_file:
       - .env.development
+      - .env
 
   db:
     image: "fastapi_starter_db:1.0.0"
