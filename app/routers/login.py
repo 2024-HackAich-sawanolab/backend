@@ -1,5 +1,5 @@
 from database import get_db
-from cruds import googleAPI
+from app.cruds import google_api
 from fastapi import APIRouter, Response, Request, status
 
 router = APIRouter()
@@ -13,13 +13,11 @@ SCOPES = ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googl
 @router.get('/login')
 async def get_google_api(request: Request):
     access_token = request.cookies.get("access_token")
-    #access_tokenがあれば返すだけ
     if access_token:
         return "OK"
-    #ログイン処理の実行
-    response = googleAPI.auth()
+    response = google_api.auth()
     return response
 
 @router.get("/auth/callback", response_model=None)
 async def auth_callback(response: Response, state: str,  code: str, scope: str, authuser: str, prompt: str):
-    return googleAPI.set_cookies(code=code)
+    return google_api.set_cookies(code=code)

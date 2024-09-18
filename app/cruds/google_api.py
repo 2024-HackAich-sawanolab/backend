@@ -27,11 +27,7 @@ def auth():
     response = RedirectResponse(url=auth_url)
     return response
 
-#認可コードからアクセストークンを取得
 def get_access_token(code: str) -> dict:
-    """
-    認可コードを使用してアクセストークンを取得する関数。
-    """
     data = {
         "code": code,
         "client_id": GOOGLE_CLIENT_ID,
@@ -54,13 +50,13 @@ def get_access_token(code: str) -> dict:
 def set_cookies(code: str):
     token_data = get_access_token(code)
     access_token = token_data.get("access_token")
-    refresh_token = token_data.get("refresh_token")  # リフレッシュトークン
-    expires_in = token_data.get("expires_in")  # アクセストークンの有効期限（秒）
+    refresh_token = token_data.get("refresh_token")
+    expires_in = token_data.get("expires_in")
     token_type = token_data.get("token_type")
     response = RedirectResponse(url="/login")
     response.set_cookie(
         key="access_token",
         value=access_token,
-        httponly=True, # HttpOnly
+        httponly=True,
     )
     return response
