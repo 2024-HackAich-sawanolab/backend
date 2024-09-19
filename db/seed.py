@@ -1,5 +1,6 @@
 from database import SessionLocal
-from models import Book, User
+from models import Book, User, Mail
+import csv
 
 db = SessionLocal()
 
@@ -16,6 +17,17 @@ def seed():
     user.books = books
 
     db.add(user)
+    db.commit()
+
+    mails = []
+    with open('./output.csv') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            mail = Mail(mail_id=row[0], user_id="333", body=row[1], answer=row[2])
+            mails.append(mail)
+    db.add_all(mails)
+
+
     db.commit()
 
 
