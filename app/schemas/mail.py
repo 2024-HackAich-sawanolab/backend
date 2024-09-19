@@ -4,10 +4,13 @@ from pydantic import BaseModel
 from uuid import UUID
 
 class Mail(BaseModel):
-    uuid: UUID
+    id: str
     title: str
-    answer_flag: bool
+    rank: str
     sent_time: datetime
+    recipient_name: str
+    recipient_mail_address: str
+
 
     class Config:
         orm_mode = True
