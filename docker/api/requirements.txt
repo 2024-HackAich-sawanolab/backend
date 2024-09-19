@@ -8,3 +8,9 @@ sqlalchemy_utils==0.36.8
 uvicorn
 python-dotenv
 requests
+
+
+
+
+
+openai
