@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter
 from routers.user import router as user_router
 from app.routers import login
 from routers.mail import router as mail_router
+from app.routers import chatgpt
 
 router = APIRouter()
 router.include_router(
@@ -21,6 +22,8 @@ router.include_router(
 @router.get('/health')
 async def health():
     return {'status': 'ok'}
+
+router.include_router(chatgpt.router)
 
 app = FastAPI()
 app.include_router(router)
