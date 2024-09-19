@@ -6,6 +6,7 @@ from schemas.user import \
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
+import requests
 
 router = APIRouter()
 

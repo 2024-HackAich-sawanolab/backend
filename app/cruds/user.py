@@ -3,10 +3,15 @@ from models import User
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_404_NOT_FOUND
 from uuid import UUID
+import requests
 
 
+# curl -X POST "http://localhost:8889/v1/collections/my_collection/search" \
+#     -H "Content-Type: application/json" \
+#     -d '{"input":"ビーチで歩く"}'
 def read_users(db: Session):
     items = db.query(User).all()
+    requests.post('http://rag-api-1:8889/v1/collections/my_collection/search', json={'input': 'ビーチで歩く'})
     return items
 
 
