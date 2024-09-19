@@ -5,8 +5,11 @@ import requests
 from fastapi import HTTPException
 from .. import env
 
-SCOPES = ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email']
-
+SCOPES = [
+    'https://www.googleapis.com/auth/gmail.modify',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email',
+]
 def auth():
     state = secrets.token_urlsafe(16)
     params = {
