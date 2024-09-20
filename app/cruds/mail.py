@@ -14,7 +14,8 @@ def create_message(db: Session, message: mail.MailCreate):
         your_name = message.your_name,
         your_mail_address =  message.your_mail_address,
         body = message.body,
-        send_time = message.send_time
+        send_time = message.send_time,
+        rank = message.rank
     )
     db.add(db_message)
     db.commit()
