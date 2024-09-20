@@ -40,6 +40,8 @@ def upgrade():
     )
     op.create_table(
         'mails',
+        sa.Column('created_at', mysql.TIMESTAMP(), server_default=sa.text('current_timestamp'), nullable=False),
+        sa.Column('updated_at', mysql.TIMESTAMP(), server_default=sa.text('current_timestamp on update current_timestamp'), nullable=False),
         sa.Column('mail_id', sa.String(length=1024), nullable=False),
         sa.Column('user_id', sa.String(length=1024), nullable=False),
         sa.Column('body', sa.Text(), nullable=True),
