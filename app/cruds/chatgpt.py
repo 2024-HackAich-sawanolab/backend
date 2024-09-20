@@ -43,6 +43,32 @@ def get_email_importance(email_content: str):
         print(e)
         return None
 
-# if __name__ == "__main__":
-#     email_content = "今日の午後からの打ち合わせについて確認したいです。"
-#     print(get_email_importance(email_content))
+def generate_email_reply(email_content: str, similar_reply: str):
+    """
+    メールの内容と過去の返信を受け取り，返信内容を生成する関数
+
+    Parameters
+    ----------
+    email_content : str
+        メールの内容（タイトル or 本文）
+    past_reply : str
+        過去の返信内容
+        
+    Returns
+    -------
+    reply : str
+        生成された返信内容
+    """
+    
+    client = OpenAI(api_key=env.OPENAI_API_KEY)
+    
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are an assistant that generates replies to inquiry emails."},
+            {"role": "user", "content": f"Given the following inquiry email: {email_content}, generate a reply."},
+            {"role": "assistant", "content": similar_reply},
+        ],
+    )
+    reply = completion.choices[0].message.content
+    return reply
