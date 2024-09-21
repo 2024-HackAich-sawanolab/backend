@@ -28,7 +28,7 @@ class MailAllResponse(Mail):
     your_mail_address:str
     rank: str
     send_time: str
-    send_flag: bool
+    send_flag: Optional[bool]
 
 
 class MailDetail(Mail):

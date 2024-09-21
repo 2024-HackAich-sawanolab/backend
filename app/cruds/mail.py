@@ -15,9 +15,14 @@ def create_message(db: Session, message: mail.MailCreate):
         your_mail_address =  message.your_mail_address,
         body = message.body,
         send_time = message.send_time,
-        rank = message.rank
+        rank = message.rank,
+        send_flag = False,
     )
     db.add(db_message)
     db.commit()
     db.refresh(db_message)
-    return db_message
+
+def get_message_by_user_id(db: Session, user_id: str):
+     skip = 0
+     limit = 100
+     return db.query(Mail).filter(Mail.user_id == user_id).offset(skip).limit(limit).all()
