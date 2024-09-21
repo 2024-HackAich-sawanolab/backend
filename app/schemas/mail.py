@@ -5,13 +5,12 @@ from uuid import UUID
 
 class Mail(BaseModel):
     mail_id: str
-    user_id: str
-    
 
     class Config:
         orm_mode = True
 
 class MailCreate(Mail):
+    user_id: str
     title: Optional[str] = None
     body: Optional[str] = None
     your_name: Optional[str] = None
@@ -20,8 +19,23 @@ class MailCreate(Mail):
     answer: Optional[str] = None
     rank: Optional[str] = None
     send_time: Optional[str] = None
-    send_flag: Optional[str] = None
+    send_flag: Optional[bool] = False
+
+class MailAllResponse(Mail):
+    title: str
+    body: str
+    your_name: str
+    your_mail_address:str
+    rank: str
+    send_time: str
+    send_flag: Optional[bool]
+
 
 class MailDetail(Mail):
+    title: str
     body: str
-    answer: Optional[str]
+    your_name: str
+    your_mail_address:str
+    ai_answer: Optional[str] = None
+    rank: str
+    send_time: str
