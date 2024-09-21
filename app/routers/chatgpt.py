@@ -17,12 +17,9 @@ async def read_users(mail_id: str, db: Session = Depends(get_db)):
         )
     title, content = get_title_and_content(db, mail_id)
     
-    # print(title, content, mail_id)
     
     # postでRAGを叩き，類似したメールのmail_idを取得する
     similar_mail_id: str = get_similar_mail_id(title, content)
-    # print(similar_mail_id)
-    # print('*'*100)
     
     # mail_idをもとにメールの蓄積された回答を取得する
     similar_reply = get_reply(db, similar_mail_id)

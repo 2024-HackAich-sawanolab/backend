@@ -76,7 +76,6 @@ def generate_email_reply(email_content: str, similar_reply: str):
     return reply
 
 def get_title_and_content(db:Session, mail_id: str) -> tuple:
-    #mail_idから"を削除
     mail_id = mail_id.replace('"', '')
     item: Mail = db.query(Mail).get(mail_id)
     title = item.title
@@ -84,17 +83,13 @@ def get_title_and_content(db:Session, mail_id: str) -> tuple:
     return title, content
 
 def get_reply(db:Session, mail_id: str) -> Mail:
-    #mail_idから"を削除
     mail_id = mail_id.replace('"', '')
-    print(mail_id)
     item: Mail = db.query(Mail).get(mail_id)
     return item
 
 def save_answer(db:Session, mail_id: str, answer: str):
     mail_id = mail_id.replace('"', '')
     item: Mail = db.query(Mail).get(mail_id)
-    print("item", item)
-    print("answer", answer)
     item.ai_answer = answer
     db.commit()
 
