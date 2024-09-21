@@ -86,6 +86,7 @@ def get_title_and_content(db:Session, mail_id: str) -> tuple:
 def get_reply(db:Session, mail_id: str) -> Mail:
     #mail_idから"を削除
     mail_id = mail_id.replace('"', '')
+    print(mail_id)
     item: Mail = db.query(Mail).get(mail_id)
     return item
 

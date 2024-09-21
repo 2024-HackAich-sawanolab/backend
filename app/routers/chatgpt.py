@@ -26,6 +26,8 @@ async def read_users(mail_id: str, db: Session = Depends(get_db)):
     
     # mail_idをもとにメールの蓄積された回答を取得する
     similar_reply = get_reply(db, similar_mail_id)
+    print(similar_reply)
+    print("*"*100)
     similar_reply = similar_reply.answer
     
     # 蓄積された回答とcontentをもとにchatgptで回答を生成する
