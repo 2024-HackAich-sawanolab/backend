@@ -3,6 +3,7 @@ from routers.user import router as user_router
 from app.routers import login
 from routers.mail import router as mail_router
 from app.routers import chatgpt
+from fastapi.middleware.cors import CORSMiddleware
 
 router = APIRouter()
 router.include_router(
@@ -26,4 +27,13 @@ async def health():
 router.include_router(chatgpt.router)
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(router)

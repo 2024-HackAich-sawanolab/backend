@@ -19,23 +19,19 @@ async def get_google_api(request: Request, db: Session = Depends(get_db)):
         mail_list = login.get_all_emails(access_token)
         for mail in mail_list:
             db_mail = crud_mail.get_message_by_mail_id(db, mail_id=mail[0])
-            print(db_mail)
             if db_mail:
                 pass
             else:
                 rank = get_email_importance(mail[4])
-                print("-"*100)
-                print(rank)
-                rank = str(rank)
                 mail_create = MailCreateSchema(
-                    mail_id = mail[0],
-                    user_id = "3",
-                    title = mail[1],
-                    your_name = mail[2],
-                    your_mail_address = mail[3],
-                    body = mail[4],
-                    send_time = mail[5],
-                    rank = rank,
+                    mail_id=mail[0],
+                    user_id="3",
+                    title=mail[1],
+                    your_name=mail[2],
+                    your_mail_address=mail[3],
+                    body=mail[4],
+                    send_time=mail[5],
+                    rank=str(rank)
                 )
                 crud_mail.create_message(db, mail_create)
         return Response(status_code=status.HTTP_200_OK)
