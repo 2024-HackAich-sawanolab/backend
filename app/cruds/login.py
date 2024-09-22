@@ -8,8 +8,10 @@ def get_all_emails(access_token):
     creds = Credentials(token=access_token)
     service = build('gmail', 'v1', credentials=creds)
     messages = []
+    query = 'in:inbox'  # 他にも 'category:primary' など
+
     try:
-        response = service.users().messages().list(userId='me').execute()
+        response = service.users().messages().list(q=query, userId='me', maxResults=30).execute()
         if 'messages' in response:
             messages.extend(response['messages'])
         while 'nextPageToken' in response:
@@ -26,7 +28,6 @@ def get_all_emails(access_token):
             payload = message.get('payload', {})
             headers = payload.get('headers', [])
             parts = payload.get('parts', [])
-            
             # ヘッダー情報の取得
             subject =""
             from_ = ""
