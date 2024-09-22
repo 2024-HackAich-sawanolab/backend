@@ -39,3 +39,8 @@ class MailDetail(Mail):
     ai_answer: Optional[str] = None
     rank: str
     send_time: str
+
+class MailSendRequest(BaseModel):
+    your_mail_address: str
+    title: str
+    body: str

@@ -3,7 +3,7 @@ from database import get_db
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from typing import List
-from schemas.mail import MailAllResponse as MailAllResponseSchema, MailDetail as MailDetailSchema, MailCreate as MailCreateSchema
+from schemas.mail import MailAllResponse as MailAllResponseSchema, MailDetail as MailDetailSchema, MailCreate as MailCreateSchema, MailSendRequest as MailSendRequestSchema
 import cruds.mail as crud_mail
 import cruds.mail_send_flag as crud_send_flag
 from app.cruds.mail_send_flag import store_send_flag_by_mail_id as store_send_flag
@@ -46,6 +46,11 @@ async def get_message_by_user_id(request: Request, db: Session = Depends(get_db)
     response = google_api.auth()
     return response
 
+@router.post('/send')
+async def send_mail_by_access_token(request: Request, message: MailSendRequestSchema):
+    access_token = request.cookies.get("access_token")
+    return crud_mail.send_mail_by_access_token(message, access_token)
+
 @router.get('/{mail_id}', response_model=MailDetailSchema)
 async def read_user(mail_id: str, db: Session = Depends(get_db)):
     return crud_mail.get_message_by_mail_id(db=db, mail_id=mail_id)
@@ -54,3 +59,4 @@ async def read_user(mail_id: str, db: Session = Depends(get_db)):
 @router.get('/{mail_id}/send_flag')
 async def store_send_flag_by_mail_id(mail_id: str, db: Session = Depends(get_db)):
     return store_send_flag(db=db, mail_id=mail_id)
+

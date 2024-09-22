@@ -13,3 +13,5 @@ then, launch containers with below:
 ```
 $ docker-compose up
 ```
+
+.env.exampleを使用して、.envファイルを作成して下さい
