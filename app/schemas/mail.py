@@ -40,7 +40,7 @@ class MailDetail(Mail):
     rank: str
     send_time: str
 
-class MailSendRequest(BaseModel):
+class MailSendRequest(Mail):
     your_mail_address: str
     title: str
     body: str

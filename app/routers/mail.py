@@ -46,10 +46,7 @@ async def get_message_by_user_id(request: Request, db: Session = Depends(get_db)
     response = google_api.auth()
     return response
 
-@router.post('/send')
-async def send_mail_by_access_token(request: Request, message: MailSendRequestSchema):
-    access_token = request.cookies.get("access_token")
-    return crud_mail.send_mail_by_access_token(message, access_token)
+
 
 @router.get('/{mail_id}', response_model=MailDetailSchema)
 async def read_user(mail_id: str, db: Session = Depends(get_db)):
@@ -59,4 +56,10 @@ async def read_user(mail_id: str, db: Session = Depends(get_db)):
 @router.get('/{mail_id}/send_flag')
 async def store_send_flag_by_mail_id(mail_id: str, db: Session = Depends(get_db)):
     return store_send_flag(db=db, mail_id=mail_id)
+
+@router.post('/send')
+async def send_mail_by_access_token(request: Request, message: MailSendRequestSchema, db: Session = Depends(get_db)):
+    access_token = request.cookies.get("access_token")
+    crud_mail.send_mail_by_access_token(message, access_token)
+    store_send_flag(db=db, mail_id=message.mail_id)
 
