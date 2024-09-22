@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 import app.cruds.login as login
 import cruds.mail as crud_mail
 from app.cruds.chatgpt import get_email_importance
+import requests
+from schemas.login import IsAuthResponse as IsAuthResponseSchema
 from schemas.mail import MailAllResponse as MailAllResponseSchema, MailDetail as MailDetailSchema, MailCreate as MailCreateSchema
 
 
@@ -41,6 +43,20 @@ async def get_google_api(request: Request, db: Session = Depends(get_db)):
     response = google_api.auth()
     return response
 
+@router.get("/is_auth", response_model=IsAuthResponseSchema)
+async def auth_callback(request: Request, response: Response):
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        response = RedirectResponse(url="/login")
+        return IsAuthResponseSchema(access = False)
+    token_info_url = 'https://oauth2.googleapis.com/tokeninfo'
+    params = {'access_token': access_token}
+    response_mail = requests.get(token_info_url, params=params)
+    if response_mail.status_code == 200:
+        return IsAuthResponseSchema(access = True)
+    else:
+        response.delete_cookie("access_token", path="/")
+        return IsAuthResponseSchema(access = False)
 
 @router.get("/auth/callback", response_model=None)
 async def auth_callback(response: Response, state: str,  code: str, scope: str, authuser: str, prompt: str):
