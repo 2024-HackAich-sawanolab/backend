@@ -10,6 +10,8 @@ SCOPES = [
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email',
 ]
+
+
 def auth():
     state = secrets.token_urlsafe(16)
     params = {
@@ -24,6 +26,7 @@ def auth():
     auth_url = f"{env.AUTHORIZATION_BASE_URL}?{urlencode(params)}"
     response = RedirectResponse(url=auth_url)
     return response
+
 
 def get_access_token(code: str) -> dict:
     data = {
@@ -44,6 +47,7 @@ def get_access_token(code: str) -> dict:
         raise HTTPException(status_code=400, detail="アクセストークンの取得に失敗しました。")
 
     return response.json()
+
 
 def set_cookies(code: str):
     token_data = get_access_token(code)
