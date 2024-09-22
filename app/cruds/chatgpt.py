@@ -67,9 +67,7 @@ def generate_email_reply(email_content: str, similar_reply: str):
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "あなたは問い合わせメールへの返信を日本語で、日本の文化的な慣習に従って生成するアシスタントです。"},
-            {"role": "user", "content": f"次の問い合わせメール本文に基づいて、本文のみの返信を生成してください: {email_content}"},
-            {"role": "assistant", "content": similar_reply},
+            {"role": "user", "content": f"あなたは問い合わせメールへの返信を日本語で、日本の文化的な慣習に従って生成するアシスタントです。次の問い合わせメール本文に基づいて、本文のみの返信を生成してください: {email_content}．参考として，過去の類似した問い合わせメールの返信文は以下の通りです: {similar_reply}"},
         ],
     )
     reply = completion.choices[0].message.content
