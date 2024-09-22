@@ -64,13 +64,14 @@ def generate_email_reply(email_content: str, similar_reply: str):
     """
 
     client = OpenAI(api_key=env.OPENAI_API_KEY)
-
+    message = f'あなたは，メールの返信を生成するアシスタントです。以下のメールの内容を踏まえて，過去の返信を参考にして，新しい返信を生成してください。 \n\
+    参考資料は以下の通りです。 \n {similar_reply} \n 以上の内容を踏まえて、以下文章を返信してください。\n\n\
+    {email_content}.'
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "You are an assistant that generates replies to inquiry emails."},
-            {"role": "user", "content": f"Given the following inquiry email: {email_content}, generate a reply."},
-            {"role": "assistant", "content": similar_reply},
+            {"role": "system", "content": ""},
+            {"role": "user", "content": message},
         ],
     )
     return completion.choices[0].message.content
