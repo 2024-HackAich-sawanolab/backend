@@ -18,7 +18,6 @@ def get_similar_mail_id(mail_title: str, mail_content: str) -> str:
         類似したメールのID
     """
 
-    # url = "http://rag-api-1:8889/v1/collections/my_collection/search"
     input_for_rag = mail_title + mail_content
     response = requests.post('http://rag_api-api-1:8889/v1/collections/my_collection/search', json={'input': input_for_rag})
     data = response.json()
