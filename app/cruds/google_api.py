@@ -55,7 +55,7 @@ def set_cookies(code: str):
     refresh_token = token_data.get("refresh_token")
     expires_in = token_data.get("expires_in")
     token_type = token_data.get("token_type")
-    response = RedirectResponse(url="/login")
+    response = RedirectResponse(url="http://localhost:5173/")
     response.set_cookie(
         key="access_token",
         value=access_token,
