@@ -1,6 +1,6 @@
 import cruds.user as crud
 from database import get_db
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Response, status
 from sqlalchemy.orm import Session
 from typing import List
 from schemas.mail import MailAllResponse as MailAllResponseSchema, MailDetail as MailDetailSchema, MailCreate as MailCreateSchema, MailSendRequest as MailSendRequestSchema
@@ -52,11 +52,13 @@ async def read_user(mail_id: str, db: Session = Depends(get_db)):
 
 @router.get('/{mail_id}/send_flag')
 async def store_send_flag_by_mail_id(mail_id: str, db: Session = Depends(get_db)):
-    return store_send_flag(db=db, mail_id=mail_id)
+    store_send_flag(db=db, mail_id=mail_id)
+    return Response(status_code=status.HTTP_200_OK)
 
 @router.post('/send')
 async def send_mail_by_access_token(request: Request, message: MailSendRequestSchema, db: Session = Depends(get_db)):
     access_token = request.cookies.get("access_token")
     crud_mail.send_mail_by_access_token(message, access_token)
     store_send_flag(db=db, mail_id=message.mail_id)
+    return Response(status_code=status.HTTP_200_OK)
 
