@@ -60,5 +60,6 @@ async def send_mail_by_access_token(request: Request, message: MailSendRequestSc
     access_token = request.cookies.get("access_token")
     crud_mail.send_mail_by_access_token(message, access_token)
     store_send_flag(db=db, mail_id=message.mail_id)
+    crud_mail.save_answer_by_access_token(db=db, mail_id=message.mail_id, answer=message.body)
     return Response(status_code=status.HTTP_200_OK)
 
