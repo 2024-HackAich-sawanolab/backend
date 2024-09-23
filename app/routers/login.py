@@ -8,7 +8,7 @@ import cruds.mail as crud_mail
 from app.cruds.chatgpt import get_email_importance
 import requests
 from schemas.login import IsAuthResponse as IsAuthResponseSchema
-from schemas.mail import MailAllResponse as MailAllResponseSchema, MailDetail as MailDetailSchema, MailCreate as MailCreateSchema
+from schemas.mail import MailCreate as MailCreateSchema
 
 
 router = APIRouter()
@@ -25,7 +25,6 @@ async def get_google_api(request: Request, db: Session = Depends(get_db)):
                 pass
             else:
                 rank = get_email_importance(mail[4])
-                print("-"*100)
                 print(rank)
                 rank = str(rank)
                 mail_create = MailCreateSchema(

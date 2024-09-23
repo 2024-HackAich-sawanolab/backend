@@ -37,7 +37,6 @@ def get_all_emails(access_token):
                 q=query, userId='me', pageToken=page_token).execute()
             if 'messages' in response:
                 messages.extend(response['messages'])
-        print(f"取得したメッセージ数: {len(messages)}")
         mail_list = []
         for msg in messages:
             try:
@@ -70,41 +69,14 @@ def get_all_emails(access_token):
                                  your_mail_address, body, formatted_str])
             except Exception as e:
                 print(f'メッセージID {msg_id} の処理中にエラーが発生しました: {e}')
-                continue  # 次のメッセージへ
+                continue
         return mail_list
     except Exception as error:
         print(f'エラーが発生しました: {error}')
         return []
 
 
-# def get_body_from_parts(parts):
-#     """
-#     メッセージのペイロードから本文を抽出する
-#     """
-#     if not parts:
-#         return ""
-
-#     for part in parts:
-#         mime_type = part.get('mimeType')
-#         filename = part.get('filename')
-#         body = part.get('body', {})
-#         data = body.get('data')
-#         parts_nested = part.get('parts')
-
-#         if mime_type == 'text/plain' and data:
-#             return decode_base64(data)
-#         elif mime_type == 'text/html' and data:
-#             return decode_base64(data)
-#         elif parts_nested:
-#             return get_body_from_parts(parts_nested)
-
-#     return ""
-
-
 def decode_base64(data):
-    """
-    Base64エンコードされたデータをデコードする
-    """
     decoded_bytes = base64.urlsafe_b64decode(data.encode('ASCII'))
     try:
         decoded_str = decoded_bytes.decode('utf-8')
