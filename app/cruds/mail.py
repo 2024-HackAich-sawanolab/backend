@@ -49,3 +49,8 @@ def create_mail(to, subject, body):
     message['subject'] = subject
     raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
     return {'raw': raw}
+
+def save_answer_by_access_token(db: Session, mail_id: str, answer: str):
+    mail: Mail = db.query(Mail).get(mail_id)
+    mail.answer = answer
+    db.commit()
