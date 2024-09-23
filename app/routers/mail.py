@@ -23,13 +23,10 @@ async def get_message_by_user_id(request: Request, db: Session = Depends(get_db)
         mail_list = login.get_all_emails(access_token)
         for mail in mail_list:
             db_mail = crud_mail.get_message_by_mail_id(db, mail_id=mail[0])
-            print(db_mail)
             if db_mail:
                 pass
             else:
                 rank = get_email_importance(mail[4])
-                print("-"*100)
-                print(rank)
                 rank = str(rank)
                 mail_create = MailCreateSchema(
                     mail_id = mail[0],

@@ -36,11 +36,8 @@ def send_mail_by_access_token(message: mail.MailSendRequest, access_token: str):
     try:
         creds = Credentials(token=access_token)
         service = build('gmail', 'v1', credentials=creds)
-        print(service)
         message = create_mail(message.your_mail_address, message.title,message.body)
-        print(message)
         sent_message = service.users().messages().send(userId='me', body=message).execute()
-        print("*"*100)
         return {"message_id": sent_message['id']}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
