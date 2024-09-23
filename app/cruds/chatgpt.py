@@ -6,20 +6,6 @@ from models import Mail
 
 
 def get_email_importance(email_content: str):
-    """
-    メールのタイトル or 本文を受け取り，その重要度を返す関数
-
-    Parameters
-    ----------
-    email_subject : str
-        メールの内容（タイトル or 本文）
-
-    Returns
-    -------
-    importance : int
-        メールの重要度
-    """
-
     client = OpenAI(api_key=env.OPENAI_API_KEY)
 
     completion = client.chat.completions.create(
@@ -47,26 +33,7 @@ def get_email_importance(email_content: str):
 
 
 def generate_email_reply(email_content: str, similar_reply: str):
-    """
-    メールの内容と過去の返信を受け取り，返信内容を生成する関数
-
-    Parameters
-    ----------
-    email_content : str
-        メールの内容（タイトル or 本文）
-    past_reply : str
-        過去の返信内容
-
-    Returns
-    -------
-    reply : str
-        生成された返信内容
-    """
-
     client = OpenAI(api_key=env.OPENAI_API_KEY)
-    message = f'あなたは，メールの返信を生成するアシスタントです。以下のメールの内容を踏まえて，過去の返信を参考にして，新しい返信を生成してください。 \n\
-    参考資料は以下の通りです。 \n {similar_reply} \n 以上の内容を踏まえて、以下文章を返信してください。\n\n\
-    {email_content}.'
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -88,8 +55,7 @@ def get_title_and_content(db: Session, mail_id: str) -> tuple:
 def get_reply(db: Session, mail_id: str) -> str:
     mail_id = mail_id.replace('"', '')
     item: Mail = db.query(Mail).get(mail_id)
-    print(item)
-    return item.body
+    return item.answer
 
 
 def save_answer(db: Session, mail_id: str, answer: str):
