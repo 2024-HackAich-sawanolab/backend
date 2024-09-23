@@ -38,7 +38,11 @@ def generate_email_reply(email_content: str, similar_reply: str):
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": ""},
-            {"role": "user", "content": f"あなたは問い合わせメールへの返信を日本語で、日本の文化的な慣習に従って生成するアシスタントです。次の問い合わせメール本文に基づいて、本文のみの返信を生成してください: {email_content}．参考として，過去の類似した問い合わせメールの返信文は以下の通りです: {similar_reply}"},
+            {"role": "user", "content": f"\
+             あなたは問い合わせメールへの返信を日本語で、類似したメール回答を参考にして，お問い合わせメールへのメールを日本の文化的な慣習に従って生成するアシスタントです。\
+             問い合わせメール本文に基づいて、本文のみの返信を生成してください. また，会社名や署名の情報は必要ないです\
+             お問い合わせメール:{email_content}．\
+             過去の類似した問い合わせの回答メール: {similar_reply}"},
         ],
     )
     return completion.choices[0].message.content
