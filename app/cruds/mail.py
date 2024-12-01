@@ -8,6 +8,7 @@ from email.mime.text import MIMEText
 import base64
 
 
+
 def get_message_by_mail_id(db: Session, mail_id: str):
     return db.query(Mail).filter(Mail.mail_id == mail_id).first()
 
