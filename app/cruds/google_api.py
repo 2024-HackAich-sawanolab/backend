@@ -127,12 +127,6 @@ def set_cookies(code: str, db: Session):
     response = RedirectResponse(url="http://localhost:5173/")
 
     response.set_cookie(
-        key="access_token",
-        value=access_token,
-        httponly=True,
-    )
-
-    response.set_cookie(
         key="session_id",
         value=hash_session_id,
         httponly=True,  # JavaScriptからアクセス不可
