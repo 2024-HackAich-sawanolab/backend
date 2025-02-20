@@ -19,7 +19,14 @@ router = APIRouter()
 
 @router.get('/login')
 async def get_google_api(request: Request, db: Session = Depends(get_db)):
-    access_token = request.cookies.get("access_token")
+    hash_session_id = request.cookies.get("session_id")
+    if not hash_session_id:
+        response = google_api.auth()
+        return response
+    session_id = decrypt_token(hash_session_id[2:-1])
+    user_id = cruds_session_authentication.get_user_id_by_session_id(db, session_id)
+    hash_access_token = cruds_user.get_access_token_by_user_id(db=db, user_id=user_id)
+    access_token = decrypt_token(hash_access_token[2:-1])
     if access_token:
         print("*"*100)
         mail_list = login.get_all_emails(access_token)
@@ -33,7 +40,7 @@ async def get_google_api(request: Request, db: Session = Depends(get_db)):
                 rank = str(rank)
                 mail_create = MailCreateSchema(
                     mail_id=mail[0],
-                    user_id="3",
+                    user_id=user_id,
                     title=mail[1],
                     your_name=mail[2],
                     your_mail_address=mail[3],
@@ -75,5 +82,5 @@ async def auth_callback(response: Response, state: str,  code: str, scope: str, 
 def logout(response: Response):
     # クッキーの削除
     response = RedirectResponse(url="/login")
-    response.delete_cookie("access_token", path="/")
+    response.delete_cookie("session_id", path="/")
     return response

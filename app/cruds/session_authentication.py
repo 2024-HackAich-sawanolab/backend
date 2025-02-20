@@ -23,6 +23,7 @@ def store_session(db: Session, session_authentication: sessionAuthenticationSche
 
 
 def get_user_id_by_session_id(db: Session, session_id: str):
+    print(type(session_id), session_id)
     session_authentication = db.query(SessionAuthentications).filter(SessionAuthentications.session_authentications_id == session_id).first()
     return session_authentication.user_id
 
