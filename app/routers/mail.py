@@ -11,14 +11,27 @@ import app.cruds.login as login
 from app.cruds.chatgpt import get_email_importance
 from fastapi.responses import RedirectResponse
 from app.cruds import google_api
-
+from schemas.login import IsAuthResponse as IsAuthResponseSchema
+import cruds.session_authentication as cruds_session_authentication
+from app.cruds.google_api import decrypt_token
+import cruds.user as cruds_user
+from app.cruds.chatgpt import get_email_importance
 
 
 router = APIRouter()
 
 @router.get('/all', response_model=List[MailAllResponseSchema])
-async def get_message_by_user_id(request: Request, db: Session = Depends(get_db), user_id="3"):
-    access_token = request.cookies.get("access_token")
+async def get_message_by_user_id(request: Request, db: Session = Depends(get_db)):
+    
+    hash_session_id = request.cookies.get("session_id")
+    if not hash_session_id:
+        response = RedirectResponse(url="/login")
+        return IsAuthResponseSchema(access = False)
+    token_info_url = 'https://oauth2.googleapis.com/tokeninfo'
+    session_id = decrypt_token(hash_session_id[2:-1])
+    user_id = cruds_session_authentication.get_user_id_by_session_id(db, session_id)
+    hash_access_token = cruds_user.get_access_token_by_user_id(db=db, user_id=user_id)
+    access_token = decrypt_token(hash_access_token[2:-1])
     if access_token:
         mail_list = login.get_all_emails(access_token)
         for mail in mail_list:
@@ -30,7 +43,7 @@ async def get_message_by_user_id(request: Request, db: Session = Depends(get_db)
                 rank = str(rank)
                 mail_create = MailCreateSchema(
                     mail_id = mail[0],
-                    user_id = "3",
+                    user_id = user_id,
                     title = mail[1],
                     your_name = mail[2],
                     your_mail_address = mail[3],
@@ -57,7 +70,16 @@ async def store_send_flag_by_mail_id(mail_id: str, db: Session = Depends(get_db)
 
 @router.post('/send')
 async def send_mail_by_access_token(request: Request, message: MailSendRequestSchema, db: Session = Depends(get_db)):
-    access_token = request.cookies.get("access_token")
+    hash_session_id = request.cookies.get("session_id")
+    if not hash_session_id:
+        response = RedirectResponse(url="/login")
+        return IsAuthResponseSchema(access = False)
+    token_info_url = 'https://oauth2.googleapis.com/tokeninfo'
+    print(hash_session_id, hash_session_id[2:-1])
+    session_id = decrypt_token(hash_session_id[2:-1])
+    user_id = cruds_session_authentication.get_user_id_by_session_id(db, session_id)
+    hash_access_token = cruds_user.get_access_token_by_user_id(db=db, user_id=user_id)
+    access_token = decrypt_token(hash_access_token[2:-1])
     crud_mail.send_mail_by_access_token(message, access_token)
     store_send_flag(db=db, mail_id=message.mail_id)
     crud_mail.save_answer_by_access_token(db=db, mail_id=message.mail_id, answer=message.body)

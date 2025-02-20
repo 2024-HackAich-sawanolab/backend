@@ -27,11 +27,17 @@ async def health():
 
 router.include_router(chatgpt.router)
 
+origins = [
+    "http://localhost:5173",
+    "http://localhost:8889",                 
+    "https://mail.google.com",                
+    "https://www.google.com",                
+]
 app = FastAPI()
 app.include_router(router)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["Content-Type"]
